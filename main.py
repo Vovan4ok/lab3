@@ -17,7 +17,7 @@ translated_pages_per_every_day = []
 max_pages = speed * hours * number_of_translators
 burnt_pages_per_every_day = []
 days_of_week = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
-speed_per_day_of_week = {"Monday": [], "Tuesday": [], "Wednesday": [], "Thursday": [], "Friday": []}
+speed_per_every_day = []
 
 
 def get_docs_number_for_the_day(day):
@@ -54,7 +54,7 @@ def model_immitation():
         translated_pages_per_every_day.append(translated_pages_for_this_day)
         earned_money_per_every_day.append(translated_pages_per_every_day[i] * cost)
         lost_money_per_every_day.append(burnt_pages_per_every_day[i] * cost)
-        speed_per_day_of_week[day].append(translated_pages_per_every_day[i] / hours)
+        speed_per_every_day.append(translated_pages_per_every_day[i] / hours)
 
         print("####################################################################################################################")
         print("Номер ітерації: " + str(i))
@@ -65,7 +65,7 @@ def model_immitation():
         print("Було принесено коштів компанії за поточний день: " + str(earned_money_per_every_day[i]))
         print("Кількість сторінок, яка 'згоріла' через те, що швидкість перекладача обмежена: " + str(burnt_pages_per_every_day[i]))
         print("Було втрачено коштів компанією за поточний день: " + str(lost_money_per_every_day[i]))
-        print("Швидкість перекладача за день (сторінок в годину): " + str(translated_pages_per_every_day[i] / hours))
+        print("Швидкість перекладача за день (сторінок в годину): " + str(speed_per_every_day[i]))
         print("####################################################################################################################")
 
 
@@ -88,10 +88,26 @@ def build_table():
     print(table)
 
 
+def build_graphic():
+    sum = 0
+    for i in range(len(translated_pages_per_every_day)):
+        sum += translated_pages_per_every_day[i]
+    average_pages = sum / modeling_durability
+    average_pages_arr = [average_pages for i in range(modeling_durability)]
+    plt.figure(figsize=(15, 5))
+    plt.plot([i for i in range(modeling_durability)], translated_pages_per_every_day, label="Кількість сторінок")
+    plt.plot([i for i in range(modeling_durability)], average_pages_arr, label="Середня кількість сторінок", color="red")
+    plt.xlabel("№ дня")
+    plt.ylabel("Кількість сторінок")
+    plt.title("Загруженість перекладача по дням")
+    plt.legend(loc="upper right")
+    plt.show()
+
 def main():
     model_immitation()
     build_histogramma()
     build_table()
+    build_graphic()
 
 
 main()
